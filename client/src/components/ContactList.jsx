@@ -1,0 +1,25 @@
+import React from "react";
+
+function ContactList() {
+  const { contacts } = useContext(ChatContext);
+  return (
+    <div className="w-full h-[350px] bg-gray-100 rounded-lg">
+      {contacts.length < 1 && (
+        <div className="w-full h-full flex items-center justify-center p-2 text-gray-400 font-semibold">
+          there is no chat yet
+        </div>
+      )}
+      {contacts.map((contacti, index) => (
+        <div
+          key={index}
+          className="w-full h-12 bg-gray-200 rounded-lg flex items-center justify-between px-2 cursor-pointer hover:bg-gray-300"
+        >
+          <div className="text-gray-600 font-semibold">{contacti.name}</div>
+          <div className="text-gray-400 font-semibold">{contacti.secret}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default ContactList;

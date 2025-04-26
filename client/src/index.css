@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+.input-style{
+    @apply border border-slate-500 focus:border-slate-700 p-2 rounded-md;
+}
+
+.button-style{
+    @apply p-2 rounded-md font-semibold text-lg text-white bg-green-600 hover:bg-green-800 cursor-pointer;
+}

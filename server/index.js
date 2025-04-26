@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
+const { error } = require("console");
 // const crypto = require("crypto");
 
 const app = express();
@@ -32,7 +33,22 @@ io.on("connection", (socket) => {
     users[username] = socket.id;
     socket.username = username;
     console.log(`${username} connected`);
-    socket.emit("login_success", username);
+    socket.emit("logged", username);
+  });
+
+  socket.on("request", ({ computes, to }) => {
+    const targetSocketId = users[to];
+    console.log(`Request from ${socket.username} to ${to}: ${computes}`);
+
+    if (targetSocketId) {
+      io.to(targetSocketId).emit("request", {
+        computes,
+        from: socket.username,
+      });
+      socket.emit("sentreqres", { error: false });
+    } else {
+      socket.emit("sentreqres", { error: true });
+    }
   });
 
   socket.on("send_message", ({ to, message }) => {

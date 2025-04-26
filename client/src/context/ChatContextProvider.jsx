@@ -5,9 +5,14 @@ const socket = io("http://localhost:5000/", {});
 export const ChatContext = createContext({});
 
 export function ChatContextProvider({ children }) {
-  useEffect(() => {}, [socket]);
+  const [user, setUser] = useState(null);
+  const [contacts, setContacts] = useState([]);
 
   return (
-    <ChatContext.Provider value={{ socket }}>{children}</ChatContext.Provider>
+    <ChatContext.Provider
+      value={{ socket, user, setUser, contacts, setContacts }}
+    >
+      {children}
+    </ChatContext.Provider>
   );
 }

@@ -20,12 +20,9 @@ function Login() {
         type="text"
         required
         placeholder="Enter your name"
-        className="border border-slate-500 focus:border-slate-700 p-2 rounded-md w-full"
+        className="input-style w-full"
       />
-      <button
-        type="submit"
-        className="py-2 rounded-md font-semibold text-lg text-white bg-green-600 hover:bg-green-800 w-ful cursor-pointer"
-      >
+      <button type="submit" className="button-style">
         Start Chatting
       </button>
     </form>
