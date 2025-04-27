@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import { calKey } from "../utils/calculations";
+import { decrypt } from "../utils/ciphers";
 const socket = io("http://localhost:5000/", {});
 
 export const ChatContext = createContext({});
@@ -11,16 +12,23 @@ export function ChatContextProvider({ children }) {
   const [messages, setMessages] = useState({});
   const [selectedContact, setSelectedContact] = useState(null);
 
-  const addMessage = (contactName, message, sent) => {
+  const addMessage = (contactName, message, encrypt, sent) => {
     setMessages((prevMessages) => ({
       ...prevMessages,
-      [contactName]: [...(prevMessages[contactName] || []), { message, sent }],
+      [contactName]: [
+        ...(prevMessages[contactName] || []),
+        { message, sent, encrypt },
+      ],
     }));
   };
 
   useEffect(() => {
-    socket.on("receive_message", (message) => {
-      addMessage(message.from, message.message, false);
+    socket.on("receive_message", (msg) => {
+      if (!msg) return;
+      const { from, message, iv } = msg;
+      const key = contacts.find((contact) => contact.name === from)?.key;
+      const decryptedMessage = decrypt(message, key, iv);
+      addMessage(from, decryptedMessage, message, false);
     });
 
     socket.on("accept_request", (data) => {

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ChatContext } from "../context/ChatContextProvider";
+import { encrypt, generateIV } from "../utils/ciphers";
 
 function Messages() {
   const [message, setMessage] = useState("");
@@ -9,12 +10,15 @@ function Messages() {
     e.preventDefault();
     if (message.trim() === "") return;
     const messageToSend = message;
+    const iv = generateIV();
+    const encryptedMessage = encrypt(messageToSend, selectedContact.key, iv);
     setMessage("");
     socket.emit("send_message", {
       to: selectedContact.name,
-      message: messageToSend,
+      message: encryptedMessage,
+      iv: iv,
     });
-    addMessage(selectedContact.name, messageToSend, true);
+    addMessage(selectedContact.name, messageToSend, encryptedMessage, true);
   };
 
   useEffect(() => {
@@ -38,7 +42,7 @@ function Messages() {
         </div>
       )}
 
-      <div className="w-full flex-1 flex flex-col text-gray-400 font-semibold overflow-y-auto">
+      <div className="w-full flex-1 flex flex-col gap-1 text-gray-400  overflow-y-auto p-1">
         {messages[selectedContact.name] &&
           messages[selectedContact.name].map((msg, index) => (
             <div
@@ -47,12 +51,23 @@ function Messages() {
             >
               <div
                 className={`${
-                  msg.sent ? "text-right" : "text-left"
-                } p-2 m-2 rounded-lg ${
-                  msg.sent ? "bg-blue-500 text-white" : "bg-gray-200 text-black"
+                  msg.sent ? "ml-20" : "mr-20"
+                } p-2 flex flex-col rounded-lg ${
+                  msg.sent
+                    ? "bg-blue-500 text-white flex-col-reverse"
+                    : "bg-gray-200 text-black"
                 }`}
               >
-                {msg.message}
+                <div>
+                  <span className="text-xs">Encrypted:</span>{" "}
+                  <span className="font-semibold text-sm break-all">
+                    {msg.encrypt}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-xs">Plain Text:</span>{" "}
+                  <span className="font-semibold text-sm">{msg.message}</span>
+                </div>
               </div>
             </div>
           ))}

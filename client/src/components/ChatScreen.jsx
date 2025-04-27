@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ChatContext } from "../context/ChatContextProvider";
 import Chat from "./Chat";
 import ContactList from "./ContactList";
-import { calCompuvate } from "../utils/calculations";
+import { baseNum, calCompuvate, modulusNum } from "../utils/calculations";
 
 function ChatScreen() {
   const { socket, user, setContacts, contacts } = useContext(ChatContext);
@@ -67,9 +67,7 @@ function ChatScreen() {
       alert("You cannot send a request to yourself.");
       return;
     }
-    const existingContact = contacts.find(
-      (c) => c.name === contact && c.secret === secret
-    );
+    const existingContact = contacts.find((c) => c.name === contact);
     if (existingContact) {
       alert("You have already sent a request to this contact.");
       return;
@@ -78,11 +76,22 @@ function ChatScreen() {
     socket.emit("request", { computes: calCompuvate(secret), to: contact });
   };
   return (
-    <div className="max-w-[700px] w-full flex flex-col gap-3">
-      <div className="bg-white rounded-lg shadow-md flex overflow-hidden w-full p-3">
-        User name: {user}
+    <div className="max-w-[700px]  w-full flex flex-col gap-3">
+      <div className="bg-white rounded-lg shadow-md flex justify-between overflow-hidden w-full p-3">
+        <div>
+          {" "}
+          User name: <span className="font-bold">{user}</span>
+        </div>
+        <div className="flex gap-5">
+          <div>
+            Base Value: <span className="font-bold">{baseNum}</span>
+          </div>
+          <div>
+            Modulus Value: <span className="font-bold">{modulusNum}</span>
+          </div>
+        </div>
       </div>
-      <div className="bg-white rounded-lg shadow-md flex overflow-hidden w-full">
+      <div className="bg-white rounded-lg shadow-md flex overflow-hidden w-full h-[500px]">
         <div className="w-2/5  py-3 pl-3 flex flex-col gap-3">
           <ContactList />
           <form onSubmit={handleRequest} className="flex flex-col gap-1">
