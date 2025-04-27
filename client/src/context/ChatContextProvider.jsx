@@ -59,9 +59,19 @@ export function ChatContextProvider({ children }) {
       }
     });
 
+    socket.on("user_disconnected", (user) => {
+      if (selectedContact && selectedContact.name === user) {
+        setSelectedContact(null);
+      }
+      setContacts((prevContacts) => {
+        return prevContacts.filter((contact) => contact.name !== user);
+      });
+    });
+
     return () => {
       socket.off("receive_message");
       socket.off("accept_request");
+      socket.off("user_disconnected");
     };
   }, [selectedContact, socket]);
 

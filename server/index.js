@@ -82,6 +82,9 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     if (socket.username) {
+      //send to all users that this user has disconnected
+      socket.broadcast.emit("user_disconnected", socket.username);
+      
       delete users[socket.username];
       console.log(`${socket.username} disconnected`);
     }
