@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { ChatContext } from "../context/ChatContextProvider";
 
 function Chat() {
-  const { selectedContact, socket, setContacts } = useContext(ChatContext);
+  const { selectedContact, socket, setContacts, setSelectedContact } =
+    useContext(ChatContext);
   const [secret, setSecret] = useState("");
 
   const handleRequest = (e) => {
@@ -19,6 +20,13 @@ function Chat() {
         if (data.error) {
           alert("User not found");
         } else {
+          setSelectedContact((prevContact) => {
+            return {
+              ...prevContact,
+              secret: secret,
+              myComputes: secret,
+            };
+          });
           setContacts((prevContacts) => {
             return prevContacts.map((contact) => {
               if (contact.name === selectedContact.name) {
@@ -39,6 +47,13 @@ function Chat() {
     socket.on("accept_request", (data) => {
       if (data) {
         const { computes, from } = data;
+        // Update the selected contact with the computes value
+        setSelectedContact((prevContact) => {
+          return {
+            ...prevContact,
+            computes: computes,
+          };
+        });
         setContacts((prevContacts) => {
           return prevContacts.map((contact) => {
             if (contact.name === from) {
@@ -57,7 +72,7 @@ function Chat() {
       socket.off("sentconres");
       socket.off("accept_request");
     };
-  }, [socket]);
+  }, [socket, secret, selectedContact]);
 
   if (!selectedContact) {
     return (
@@ -95,7 +110,7 @@ function Chat() {
         <div className="w-full h-full flex items-center justify-center p-15">
           <form onSubmit={handleRequest} className="flex flex-col gap-1">
             <input
-              type="text"
+              type="number"
               required
               placeholder="Enter a secret key"
               className="input-style w-full"

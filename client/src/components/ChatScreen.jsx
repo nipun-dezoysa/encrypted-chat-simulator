@@ -4,7 +4,7 @@ import Chat from "./Chat";
 import ContactList from "./ContactList";
 
 function ChatScreen() {
-  const { socket, user, contacts, setContacts } = useContext(ChatContext);
+  const { socket, user, setContacts, contacts } = useContext(ChatContext);
   const [secret, setSecret] = useState("");
   const [contact, setContact] = useState("");
 
@@ -56,6 +56,18 @@ function ChatScreen() {
       alert("Please fill in both fields.");
       return;
     }
+    if (user.name == contact) {
+      alert("You cannot send a request to yourself.");
+      return;
+    }
+    const existingContact = contacts.find(
+      (c) => c.name === contact && c.secret === secret
+    );
+    if (existingContact) {
+      alert("You have already sent a request to this contact.");
+      return;
+    }
+
     socket.emit("request", { computes: secret, to: contact });
   };
   return (
@@ -77,7 +89,7 @@ function ChatScreen() {
             />
             <div className="flex gap-1">
               <input
-                type="text"
+                type="number"
                 required
                 placeholder="Enter a secret key"
                 className="input-style w-full"
