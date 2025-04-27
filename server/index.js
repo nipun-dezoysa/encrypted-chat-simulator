@@ -51,6 +51,20 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("accept_request", ({ computes, to }) => {
+    const targetSocketId = users[to];
+    console.log(`Confirm from ${socket.username} to ${to}: ${computes}`);
+    if (targetSocketId) {
+      io.to(targetSocketId).emit("accept_request", {
+        computes,
+        from: socket.username,
+      });
+      socket.emit("sentconres", { error: false });
+    } else {
+      socket.emit("sentconres", { error: true });
+    }
+  });
+
   socket.on("send_message", ({ to, message }) => {
     // const encrypted = encrypt(`${socket.username}: ${message}`);
     const targetSocketId = users[to];

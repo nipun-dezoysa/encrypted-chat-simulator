@@ -7,10 +7,27 @@ export const ChatContext = createContext({});
 export function ChatContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [contacts, setContacts] = useState([]);
+  const [messages, setMessages] = useState({});
+  const [selectedContact, setSelectedContact] = useState(null);
 
+  const addMessage = (contactName, message) => {
+    setMessages((prevMessages) => ({
+      ...prevMessages,
+      [contactName]: [...(prevMessages[contactName] || []), message],
+    }));
+  };
   return (
     <ChatContext.Provider
-      value={{ socket, user, setUser, contacts, setContacts }}
+      value={{
+        socket,
+        user,
+        setUser,
+        contacts,
+        setContacts,
+        messages,
+        selectedContact,
+        setSelectedContact,
+      }}
     >
       {children}
     </ChatContext.Provider>

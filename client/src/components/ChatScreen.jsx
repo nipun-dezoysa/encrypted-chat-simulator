@@ -10,22 +10,43 @@ function ChatScreen() {
 
   useEffect(() => {
     socket.on("sentreqres", (data) => {
-      if (data.error) {
-        alert("User not found");
-      } else {
-        setContacts((prevContacts) => [
-          ...prevContacts,
-          { name: contact, secret: secret, computes: null, messages: [] },
-        ]);
-        // Reset the contact and secret states
-        setContact("");
-        setSecret("");
+      if (data) {
+        if (data.error) {
+          alert("User not found");
+        } else {
+          setContacts((prevContacts) => [
+            ...prevContacts,
+            {
+              name: contact,
+              secret: secret,
+              myComputes: secret,
+              computes: null,
+              key: null,
+            },
+          ]);
+          // Reset the contact and secret states
+          setContact("");
+          setSecret("");
+        }
+      }
+    });
+
+    socket.on("request", (data) => {
+      if (data) {
+        const { computes, from } = data;
+        setContacts((prevContacts) => {
+          return [
+            ...prevContacts,
+            { name: from, computes: computes, key: null, secret: null },
+          ];
+        });
       }
     });
 
     // Cleanup the socket listener to avoid duplicate event handlers
     return () => {
       socket.off("sentreqres");
+      socket.off("request");
     };
   }, [socket, contact, secret]);
 
