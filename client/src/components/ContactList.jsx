@@ -13,7 +13,9 @@ function ContactList() {
       {contacts.map((contacti, index) => (
         <div
           key={index}
-          onClick={() => setSelectedContact(contacti)}
+          onClick={() => {
+            setSelectedContact(contacts[index]);
+          }}
           className="w-full h-12 bg-gray-200 rounded-lg flex items-center justify-between px-2 cursor-pointer hover:bg-gray-300"
         >
           <div className="text-gray-600 font-semibold">{contacti.name}</div>

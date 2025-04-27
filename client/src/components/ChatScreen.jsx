@@ -110,7 +110,7 @@ function ChatScreen() {
           </form>
         </div>
         <div className="w-3/5 p-3">
-          <div className="w-full h-full bg-gray-100 rounded-lg overflow-hidden">
+          <div className="w-full h-full bg-gray-100 rounded-lg overflow-hidden flex flex-col">
             <Chat />
           </div>
         </div>
