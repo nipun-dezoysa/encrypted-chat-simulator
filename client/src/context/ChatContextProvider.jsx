@@ -11,18 +11,16 @@ export function ChatContextProvider({ children }) {
   const [messages, setMessages] = useState({});
   const [selectedContact, setSelectedContact] = useState(null);
 
-  const addMessage = (contactName, message) => {
+  const addMessage = (contactName, message, sent) => {
     setMessages((prevMessages) => ({
       ...prevMessages,
-      [contactName]: [...(prevMessages[contactName] || []), message],
+      [contactName]: [...(prevMessages[contactName] || []), { message, sent }],
     }));
   };
 
   useEffect(() => {
     socket.on("receive_message", (message) => {
-      if (selectedContact && selectedContact.name === message.from) {
-        addMessage(message.from, message.text);
-      }
+      addMessage(message.from, message.message, false);
     });
 
     socket.on("accept_request", (data) => {

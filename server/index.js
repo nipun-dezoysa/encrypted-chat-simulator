@@ -69,7 +69,13 @@ io.on("connection", (socket) => {
     // const encrypted = encrypt(`${socket.username}: ${message}`);
     const targetSocketId = users[to];
     if (targetSocketId) {
-      io.to(targetSocketId).emit("receive_message", message);
+      io.to(targetSocketId).emit("receive_message", {
+        message,
+        from: socket.username,
+      });
+      socket.emit("sent_message", { error: false });
+    } else {
+      socket.emit("sent_message", { error: true });
     }
   });
 
