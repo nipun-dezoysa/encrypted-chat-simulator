@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ChatContext } from "../context/ChatContextProvider";
+import { calCompuvate } from "../utils/calculations";
 
 function Chat() {
   const { selectedContact, socket, setContacts, setSelectedContact } =
@@ -9,7 +10,7 @@ function Chat() {
   const handleRequest = (e) => {
     e.preventDefault();
     socket.emit("accept_request", {
-      computes: secret,
+      computes: calCompuvate(secret),
       to: selectedContact.name,
     });
   };
@@ -20,11 +21,12 @@ function Chat() {
         if (data.error) {
           alert("User not found");
         } else {
+          const myComputes = calCompuvate(secret);
           setSelectedContact((prevContact) => {
             return {
               ...prevContact,
               secret: secret,
-              myComputes: secret,
+              myComputes: myComputes,
             };
           });
           setContacts((prevContacts) => {
@@ -33,7 +35,7 @@ function Chat() {
                 return {
                   ...contact,
                   secret: secret,
-                  myComputes: secret,
+                  myComputes: myComputes,
                 };
               }
               return contact;

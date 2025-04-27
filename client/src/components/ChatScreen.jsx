@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ChatContext } from "../context/ChatContextProvider";
 import Chat from "./Chat";
 import ContactList from "./ContactList";
+import { calCompuvate } from "../utils/calculations";
 
 function ChatScreen() {
   const { socket, user, setContacts, contacts } = useContext(ChatContext);
@@ -19,7 +20,7 @@ function ChatScreen() {
             {
               name: contact,
               secret: secret,
-              myComputes: secret,
+              myComputes: calCompuvate(secret),
               computes: null,
               key: null,
             },
@@ -37,7 +38,13 @@ function ChatScreen() {
         setContacts((prevContacts) => {
           return [
             ...prevContacts,
-            { name: from, computes: computes, key: null, secret: null },
+            {
+              name: from,
+              computes: computes,
+              key: null,
+              secret: null,
+              myComputes: null,
+            },
           ];
         });
       }
@@ -68,7 +75,7 @@ function ChatScreen() {
       return;
     }
 
-    socket.emit("request", { computes: secret, to: contact });
+    socket.emit("request", { computes: calCompuvate(secret), to: contact });
   };
   return (
     <div className="max-w-[700px] w-full flex flex-col gap-3">
