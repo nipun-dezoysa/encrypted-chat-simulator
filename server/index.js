@@ -2,8 +2,6 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
-const { error } = require("console");
-// const crypto = require("crypto");
 
 const app = express();
 app.use(cors());
@@ -15,18 +13,7 @@ const io = new Server(server, {
   },
 });
 
-const users = {}; // username -> socket.id
-const SECRET = "myencryptionkey123";
-
-// function encrypt(text) {
-//   const cipher = crypto.createCipher("aes-256-ctr", SECRET);
-//   return cipher.update(text, "utf8", "hex") + cipher.final("hex");
-// }
-
-// function decrypt(text) {
-//   const decipher = crypto.createDecipher("aes-256-ctr", SECRET);
-//   return decipher.update(text, "hex", "utf8") + decipher.final("utf8");
-// }
+const users = {};
 
 io.on("connection", (socket) => {
   socket.on("login", (username) => {
@@ -66,7 +53,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", ({ to, message, iv }) => {
-    // const encrypted = encrypt(`${socket.username}: ${message}`);
     const targetSocketId = users[to];
     if (targetSocketId) {
       io.to(targetSocketId).emit("receive_message", {
@@ -84,7 +70,7 @@ io.on("connection", (socket) => {
     if (socket.username) {
       //send to all users that this user has disconnected
       socket.broadcast.emit("user_disconnected", socket.username);
-      
+
       delete users[socket.username];
       console.log(`${socket.username} disconnected`);
     }
