@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ChatContext } from "../context/ChatContextProvider";
 import { calCompuvate, calKey } from "../utils/calculations";
 import Messages from "./Messages";
-
+import { IoMdArrowBack } from "react-icons/io";
 function Chat() {
   const { selectedContact, socket, setContacts, setSelectedContact } =
     useContext(ChatContext);
@@ -66,7 +66,12 @@ function Chat() {
   return (
     <>
       <div className="w-full p-3 bg-gray-200 flex flex-col">
-        <div>{selectedContact.name}</div>
+        <div className="flex items-center gap-1 text-lg">
+          <div className="cursor-pointer rounded-full hover:bg-gray-300 p-1" onClick={() => setSelectedContact(null)}>
+            <IoMdArrowBack />
+          </div>
+          <div>{selectedContact.name}</div>
+        </div>
         <div className="flex text-xs justify-between text-gray-400">
           <div>
             My Secret: {selectedContact.secret ? selectedContact.secret : "N/A"}

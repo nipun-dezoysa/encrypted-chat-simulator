@@ -5,7 +5,8 @@ import ContactList from "./ContactList";
 import { baseNum, calCompuvate, modulusNum } from "../utils/calculations";
 
 function ChatScreen() {
-  const { socket, user, setContacts, contacts } = useContext(ChatContext);
+  const { socket, user, setContacts, contacts, selectedContact } =
+    useContext(ChatContext);
   const [secret, setSecret] = useState("");
   const [contact, setContact] = useState("");
 
@@ -76,7 +77,7 @@ function ChatScreen() {
     socket.emit("request", { computes: calCompuvate(secret), to: contact });
   };
   return (
-    <div className="max-w-[700px]  w-full flex flex-col gap-3">
+    <div className="max-w-[700px] w-full max-md:h-dvh flex flex-col gap-3 p-5">
       <div className="bg-white rounded-lg shadow-md flex justify-between overflow-hidden w-full p-3">
         <div>
           {" "}
@@ -91,8 +92,10 @@ function ChatScreen() {
           </div>
         </div>
       </div>
-      <div className="bg-white rounded-lg shadow-md flex overflow-hidden w-full h-[500px]">
-        <div className="w-2/5  py-3 pl-3 flex flex-col gap-3">
+      <div className="bg-white relative rounded-lg shadow-md flex flex-col md:flex-row overflow-hidden w-full max-md:flex-1 md:h-[500px]">
+        <div
+          className={`md:w-2/5 max-md:absolute top-0 w-full bg-white h-full py-3 pl-3 max-md:pr-3 flex flex-col gap-3 ${selectedContact ? "max-md:hidden" : ""}`}
+        >
           <ContactList />
           <form onSubmit={handleRequest} className="flex flex-col gap-1">
             <input
@@ -118,7 +121,7 @@ function ChatScreen() {
             </div>
           </form>
         </div>
-        <div className="w-3/5 p-3">
+        <div className="md:w-3/5 h-full p-3">
           <div className="w-full h-full bg-gray-100 rounded-lg overflow-hidden flex flex-col">
             <Chat />
           </div>
