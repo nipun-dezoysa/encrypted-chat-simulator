@@ -16,7 +16,7 @@ function App() {
     });
   }, [socket]);
   return (
-    <div className="w-full min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+    <div className="w-full min-h-screen bg-gray-100 flex flex-col items-center justify-center p-5">
       {user ? <ChatScreen /> : <Login />}
     </div>
   );

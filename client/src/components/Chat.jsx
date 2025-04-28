@@ -72,7 +72,7 @@ function Chat() {
           </div>
           <div>{selectedContact.name}</div>
         </div>
-        <div className="flex text-xs justify-between text-gray-400">
+        <div className="flex flex-wrap justify-center gap-2 text-xs md:justify-between text-gray-400">
           <div>
             My Secret: {selectedContact.secret ? selectedContact.secret : "N/A"}
           </div>

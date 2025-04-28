@@ -77,10 +77,9 @@ function ChatScreen() {
     socket.emit("request", { computes: calCompuvate(secret), to: contact });
   };
   return (
-    <div className="max-w-[700px] w-full max-md:h-dvh flex flex-col gap-3 p-5">
-      <div className="bg-white rounded-lg shadow-md flex justify-between overflow-hidden w-full p-3">
+    <div className="max-w-[700px] w-full max-md:h-svh flex flex-col gap-3">
+      <div className="bg-white rounded-lg shadow-md flex flex-col md:flex-row items-center md:justify-between overflow-hidden w-full p-3">
         <div>
-          {" "}
           User name: <span className="font-bold">{user}</span>
         </div>
         <div className="flex gap-5">

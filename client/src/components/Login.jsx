@@ -13,7 +13,7 @@ function Login() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-[400px] bg-white p-5 rounded-lg shadow-md flex flex-col gap-3"
+      className="max-w-[400px] w-full bg-white p-5 rounded-lg shadow-md flex flex-col gap-3"
     >
       <h1 className="text-center font-semibold">Encrypt Chat Simulator</h1>
       <input
