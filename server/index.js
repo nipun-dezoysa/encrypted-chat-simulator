@@ -17,10 +17,14 @@ const users = {};
 
 io.on("connection", (socket) => {
   socket.on("login", (username) => {
+    if (users[username]) {
+      socket.emit("logged", { error: true });
+      return;
+    }
     users[username] = socket.id;
     socket.username = username;
     console.log(`${username} connected`);
-    socket.emit("logged", username);
+    socket.emit("logged", {username, error: false});
   });
 
   socket.on("request", ({ computes, to }) => {

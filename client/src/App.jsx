@@ -8,7 +8,11 @@ function App() {
 
   useEffect(() => {
     socket.on("logged", (data) => {
-      setUser(data);
+      if (data.error) {
+        alert("Username already taken");
+        return;
+      }
+      setUser(data.username);
     });
   }, [socket]);
   return (
