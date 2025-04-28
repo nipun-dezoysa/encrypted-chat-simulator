@@ -2,7 +2,9 @@ import React, { createContext, useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import { calKey } from "../utils/calculations";
 import { decrypt } from "../utils/ciphers";
-const socket = io("http://localhost:5000/", {});
+
+const socket = io("https://encrypted-chat-simulator.onrender.com", {});
+//const socket = io("http://localhost:5000/", {});
 
 export const ChatContext = createContext({});
 
